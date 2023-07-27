@@ -1,0 +1,45 @@
+<h2>
+  Login
+</h2>
+
+<app-model-state-error></app-model-state-error>
+<form *ngIf="form" nz-form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input your username!">
+      <nz-input-group nzPrefixIcon="user">
+        <input type="text" nz-input formControlName="userName" placeholder="Username" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input your Password!">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" nz-input formControlName="password" placeholder="Password" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-row nzJustify="space-between" class="mb-1">
+    <nz-col>
+      <label nz-checkbox formControlName="rememberLogin">
+        <span>Remember me</span>
+      </label>
+    </nz-col>
+    <nz-col>
+      <a [routerLink]="routers.auth.forgotPassword">Forgot Password?</a>
+    </nz-col>
+  </nz-row>
+  <button [disabled]="form.invalid" class="mb-1" [nzLoading]="loading" nz-button [nzType]="'primary'" nzBlock>Log
+    in</button>
+  <p>
+    Login with
+    <a (click)="externalLogin('GitHub')">
+      <i nz-icon nzType="github" nzTheme="outline"></i>GitHub
+    </a>
+  </p>
+  <p>
+    Don't have a account?
+    <a [routerLink]="[routers.auth.signUp]" [queryParams]="{returnUrl:returnUrl}">Sign Up</a>
+  </p>
+
+</form>

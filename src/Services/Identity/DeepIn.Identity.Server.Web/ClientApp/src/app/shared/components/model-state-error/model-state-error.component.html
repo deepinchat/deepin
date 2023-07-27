@@ -1,0 +1,10 @@
+<ng-container *ngIf="errors && errors.length > 0">
+  <nz-alert class="mt-1 mb-1" [nzType]="'error'" *ngFor="let item of errors" [nzMessage]="item.key"
+    [nzDescription]="errorDesc">
+    <ng-template #errorDesc>
+      <span *ngFor="let msg of item.values">
+        {{msg}} &nbsp;
+      </span>
+    </ng-template>
+  </nz-alert>
+</ng-container>

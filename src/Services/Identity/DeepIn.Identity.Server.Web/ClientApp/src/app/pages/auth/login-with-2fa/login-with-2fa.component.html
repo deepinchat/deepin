@@ -1,0 +1,26 @@
+<h2>
+  Login With Two Factor
+</h2>
+
+<app-model-state-error></app-model-state-error>
+<form *ngIf="form" nz-form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please enter your Two Factor Authenticator Code!">
+      <nz-input-group class="verification-code" [nzAddOnAfter]="resendCodeBtn">
+        <input type="text" nz-input formControlName="twoFactorCode" placeholder="Two Factor Authenticator Code" />
+      </nz-input-group>
+      <ng-template #resendCodeBtn>
+        <button type="button" nz-button nzType="primary" (click)="resendTwoFactorCode()">Resend</button>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <label nz-checkbox formControlName="rememberMachine">
+        <span>Remember this Browser</span>
+      </label>
+    </nz-form-control>
+  </nz-form-item>
+  <button [disabled]="form.invalid" [nzLoading]="loading" nz-button [nzType]="'primary'" nzBlock>Submit</button>
+
+</form>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Caching\DeepIn.Caching\DeepIn.Caching.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\DDD\DeepIn.Application\DeepIn.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\DeepIn.EventBus\DeepIn.EventBus.csproj" />
+    <ProjectReference Include="..\DeepIn.Chatting.Infrastructure\DeepIn.Chatting.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="IntegrationEvents\EventHandling\" />
+    <Folder Include="Validations\" />
+  </ItemGroup>
+
+</Project>

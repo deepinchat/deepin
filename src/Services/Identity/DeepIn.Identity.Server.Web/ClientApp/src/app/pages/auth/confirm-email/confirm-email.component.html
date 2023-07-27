@@ -1,0 +1,19 @@
+<h2>
+  Login
+</h2>
+
+<app-model-state-error></app-model-state-error>
+<form *ngIf="form" nz-form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please enter your Verfication Code!">
+      <nz-input-group class="verification-code" [nzAddOnAfter]="resendCodeBtn">
+        <input type="text" nz-input formControlName="code" placeholder="Verfication Code" />
+      </nz-input-group>
+      <ng-template #resendCodeBtn>
+        <button type="button" nz-button nzType="primary" (click)="resendEmailConfirmation()">Resend</button>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+  <button [disabled]="form.invalid" [nzLoading]="loading" nz-button [nzType]="'primary'" nzBlock>Submit</button>
+
+</form>

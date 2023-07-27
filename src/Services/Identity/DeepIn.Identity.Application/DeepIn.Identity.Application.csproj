@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\BuildingBlocks\Caching\DeepIn.Caching.Redis\DeepIn.Caching.Redis.csproj" />
+		<ProjectReference Include="..\..\..\BuildingBlocks\DDD\DeepIn.Application\DeepIn.Application.csproj" />
+		<ProjectReference Include="..\..\..\BuildingBlocks\EventBus\DeepIn.EventBus.RabbitMQ\DeepIn.EventBus.RabbitMQ.csproj" />
+		<ProjectReference Include="..\DeepIn.Identity.Infrastructure\DeepIn.Identity.Infrastructure.csproj" />
+	</ItemGroup>
+
+</Project>

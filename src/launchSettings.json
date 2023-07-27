@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "deepin.webspa.httpaggregator": "StartDebugging",
+        "deepin.emailing.api": "StartDebugging",
+        "deepin.messaging.api": "StartDebugging",
+        "deepin.identity.server.web": "StartDebugging",
+        "deepin.identity.server.api": "StartDebugging",
+        "deepin.identity.api": "StartDebugging",
+        "deepin.contacts.api": "StartDebugging",
+        "deepin.chatting.signalrhub": "StartDebugging",
+        "deepin.chatting.api": "StartDebugging",
+        "deepin.blobstorage.api": "StartDebugging"
+      }
+    }
+  }
+}

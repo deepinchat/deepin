@@ -1,0 +1,81 @@
+version: '3.4'
+
+services:
+  identity.server.web:
+    image: ${DOCKER_REGISTRY-}deepinidentityserverweb
+    build:
+      context: .
+      dockerfile: Services/Identity/DeepIn.Identity.Server.Web/Dockerfile
+
+  webspa.httpaggregator:
+    image: ${DOCKER_REGISTRY-}deepinwebspahttpaggregator
+    build:
+      context: .
+      dockerfile: ApiGateways/Bff/DeepIn.WebSPA.HttpAggregator/Dockerfile
+    depends_on:
+      - identity.server.web
+        
+  emailing.api:
+    image: ${DOCKER_REGISTRY-}deepinemailingapi
+    build:
+      context: .
+      dockerfile: Services/Emailing/DeepIn.Emailing.API/Dockerfile
+    depends_on:
+      - identity.server.web
+
+  messaging.api:
+    image: ${DOCKER_REGISTRY-}deepinmessagingapi
+    build:
+      context: .
+      dockerfile: Services/Messaging/DeepIn.Messaging.API/Dockerfile
+    depends_on:
+      - identity.server.web
+
+  identity.server.api:
+    image: ${DOCKER_REGISTRY-}deepinidentityserverapi
+    build:
+      context: .
+      dockerfile: Services/Identity/DeepIn.Identity.Server.API/Dockerfile
+    depends_on:
+      - identity.server.web
+
+  identity.api:
+    image: ${DOCKER_REGISTRY-}deepinidentityapi
+    build:
+      context: .
+      dockerfile: Services/Identity/DeepIn.Identity.API/Dockerfile
+    depends_on:
+      - identity.server.web
+
+  contacts.api:
+    image: ${DOCKER_REGISTRY-}deepincontactsapi
+    build:
+      context: .
+      dockerfile: Services/Contacts/DeepIn.Contacts.API/Dockerfile
+    depends_on:
+      - identity.server.web
+
+  chatting.signalrhub:
+    image: ${DOCKER_REGISTRY-}deepinchattingsignalrhub
+    build:
+      context: .
+      dockerfile: Services/Chatting/DeepIn.Chatting.SignalrHub/Dockerfile
+    depends_on:
+      - identity.server.web
+
+  chatting.api:
+    image: ${DOCKER_REGISTRY-}deepinchattingapi
+    build:
+      context: .
+      dockerfile: Services/Chatting/DeepIn.Chatting.API/Dockerfile
+    depends_on:
+      - identity.server.web
+
+  blobstorage.api:
+    image: ${DOCKER_REGISTRY-}deepinblobstorageapi
+    build:
+      context: .
+      dockerfile: Services/BlobStorage/DeepIn.BlobStorage.API/Dockerfile
+    depends_on:
+      - identity.server.web
+

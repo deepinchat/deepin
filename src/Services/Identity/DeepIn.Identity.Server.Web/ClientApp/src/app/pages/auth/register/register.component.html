@@ -1,0 +1,31 @@
+<h2>
+  Sign up
+</h2>
+<app-model-state-error></app-model-state-error>
+<form *ngIf="form" nz-form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input a vaild email!">
+      <nz-input-group nzPrefixIcon="user">
+        <input type="email" nz-input formControlName="email" placeholder="Email address" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input your Password!">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" nz-input formControlName="password" placeholder="Password" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Please input your Password!">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" nz-input formControlName="confirmPassword" placeholder="Confirm Password" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <button [disabled]="form.invalid" [nzLoading]="loading" nz-button class="mb-1" nzBlock
+    [nzType]="'primary'">Submit</button>
+  Or
+  <a [routerLink]="[routers.auth.signIn]" [queryParams]="{returnUrl:returnUrl}">Sign In</a>
+</form>
