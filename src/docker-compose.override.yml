@@ -1,66 +1,111 @@
 version: '3.4'
 
 services:
-  webspa.httpaggregator:
+  identity-server-web:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
+      - ConnectionStrings__IdentityConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepIn;
+      - ConnectionStrings__ConfigurationConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepIn;
+      - ConnectionStrings__PersistedGrantConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepIn;
+      - IdentityServer__Url=${IDENTITY_URL}
+      - IdentityServer__CertificatePath=${IDSV_CERT_PATH}
+      - IdentityServer__CertificatePassword=${IDSV_CERT_PWD}
+      - Caching__ProviderName=${CACHE_PROVIDER}
+      - Caching__ConnectionString=${REDIS_CONNECTION}
+      - Caching__DefaultCacheTimeMinutes=30
+      - Caching__Database=0
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
+      - GitHub__ClientId=${GITHUB_CLIENT_ID}
+      - GitHub__ClientSecret=${GITHUB_CLIENT_SECRET}
+      - GitHub__CallbackPath=/signin-github
     ports:
-      - "80"
+      - "5000:80"
 
-  emailing.api:
+  blob-storage-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
     ports:
-      - "80"
+      - "5001:80"
+
+  chatting-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
+    ports:
+      - "5002:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
-  messaging.api:
+  chatting-signalr-hub:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
     ports:
-      - "80"
+      - "5003:80"
 
-  identity.server.web:
+  contacts-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
     ports:
-      - "80"
+      - "5004:80"
 
-  identity.server.api:
+  emailing-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
     ports:
-      - "80"
-
-  identity.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
-
-  contacts.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
-
-  chatting.signalrhub:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
-
-  chatting.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "80"
+      - "5005:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
-  blobstorage.api:
+  identity-api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
     ports:
       - "80"
+
+  identity-server-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
+    ports:
+      - "80"
+
+  messaging-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
+    ports:
+      - "80"
+
+  web-chat-http-aggregator:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_URLS=http://+:80
+      - TZ=${TIME_ZONE}
+    ports:
+      - "5001:80"
+
+  web-chat-api-gw:
+    volumes:
+      - ./ApiGateways/Envoy/config/webspa-envoy.yml:/etc/envoy/envoy.yaml
+    ports:
+    - "9901:9901"
+    - "10000:10000"

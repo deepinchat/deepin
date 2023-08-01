@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\BuildingBlocks\Common\DeepIn.Service.Common\DeepIn.Service.Common.csproj" />
+		<ProjectReference Include="..\..\..\BuildingBlocks\EventBus\DeepIn.EventBus.Shared\DeepIn.EventBus.Shared.csproj" />
 		<ProjectReference Include="..\DeepIn.Chatting.Application\DeepIn.Chatting.Application.csproj" />
 	</ItemGroup>
 	<ItemGroup>

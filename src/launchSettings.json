@@ -13,7 +13,8 @@
         "deepin.contacts.api": "StartDebugging",
         "deepin.chatting.signalrhub": "StartDebugging",
         "deepin.chatting.api": "StartDebugging",
-        "deepin.blobstorage.api": "StartDebugging"
+        "deepin.blobstorage.api": "StartDebugging",
+        "deepin.webchat.httpaggregator": "StartDebugging"
       }
     }
   }
