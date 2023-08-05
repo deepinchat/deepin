@@ -38,7 +38,6 @@ steps:
       sshEndpoint: azure-sg
       runOptions: inline
       inline: |
-        sudo su
         cd /docker/deepin
         cat /docker/docker.password | docker login --username=leoyang0105@outlook.com --password-stdin registry.ap-southeast-1.aliyuncs.com
         docker compose pull 
