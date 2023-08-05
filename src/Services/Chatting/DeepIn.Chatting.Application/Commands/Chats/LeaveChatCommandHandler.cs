@@ -24,8 +24,8 @@ public class LeaveChatCommandHandler : IRequestHandler<JoinChatCommand, Unit>
 
     public async Task<Unit> Handle(JoinChatCommand request, CancellationToken cancellationToken)
     {
-        var isUserAlreadyJoined = await _chatQueries.IsUserInChat(request.UserId, request.Id);
-        if (isUserAlreadyJoined)
+        var isUserInChat = await _chatQueries.IsUserInChat(request.UserId, request.Id);
+        if (isUserInChat)
         {
             return Unit.Value;
         }

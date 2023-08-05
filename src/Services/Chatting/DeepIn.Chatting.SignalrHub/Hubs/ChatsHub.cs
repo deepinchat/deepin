@@ -1,6 +1,4 @@
 ﻿using DeepIn.Chatting.Application.Queries;
-using DeepIn.Chatting.SignalrHub.Models;
-using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
@@ -36,7 +34,7 @@ namespace DeepIn.Chatting.SignalrHub.Hubs
         {
             if (!string.IsNullOrEmpty(UserId))
             {
-                var chats = await _chatQueries.GetChats(UserId);
+                var chats = await _chatQueries.GetUserChats(UserId);
 
                 foreach (var chat in chats)
                 {
@@ -49,7 +47,7 @@ namespace DeepIn.Chatting.SignalrHub.Hubs
         {
             if (!string.IsNullOrEmpty(UserId))
             {
-                var chats = await _chatQueries.GetChats(UserId);
+                var chats = await _chatQueries.GetUserChats(UserId);
 
                 foreach (var chat in chats)
                 {

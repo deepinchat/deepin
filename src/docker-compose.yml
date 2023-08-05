@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   identity-server-web:
     image: ${DOCKER_REGISTRY}/identity-server-web
@@ -7,7 +5,7 @@ services:
       context: .
       dockerfile: Services/Identity/DeepIn.Identity.Server.Web/Dockerfile
 
-  blobstorage-api:
+  blob-storage-api:
     image: ${DOCKER_REGISTRY}/blob-storage-api
     build:
       context: .
@@ -23,7 +21,7 @@ services:
     depends_on:
       - identity-server-web
 
-  chatting-signalrhub:
+  chatting-signalr-hub:
     image: ${DOCKER_REGISTRY}/chatting-signalr-hub
     build:
       context: .

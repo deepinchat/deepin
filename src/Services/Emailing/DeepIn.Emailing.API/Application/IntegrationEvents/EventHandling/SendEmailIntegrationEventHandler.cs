@@ -32,7 +32,7 @@ namespace DeepIn.Emailing.API.Application.IntegrationEvents.EventHandling
                     Subject = @event.Subject,
                     To = @event.To,
                     CC = @event.CC,
-                    CreatedAt = @event.CreatedAt,
+                    CreatedAt = @event.CreatedDateTime,
                     IsBodyHtml = @event.IsBodyHtml,
                     IpAddress = @event.IpAddress,
                 };

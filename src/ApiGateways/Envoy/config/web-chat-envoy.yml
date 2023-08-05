@@ -20,89 +20,119 @@ static_resources:
             - name: eshop_backend
               domains: ["*"]
               routes:
-              - match: { prefix: "/hubs/chats" }
+              - match: { prefix: "/bss/" }
+                route: { cluster: bss_api }
+              - match: { prefix: "/chatting/" }
+                route: { cluster: chatting_api }
+              - match: { prefix: "/hubs/" }
                 route:
                   auto_host_rewrite: true
-                  cluster: chat_hub
+                  cluster: chatting_hub
                   timeout: 300s
                   upgrade_configs:
                     upgrade_type: "websocket"
                     enabled: true
-              - match: { prefix: "/chatting/" }
-                route: { cluster: chat_api }
+              - match: { prefix: "/contacts/" }
+                route: { cluster: contacts_api }
               - match: { prefix: "/identity/" }
-                route: { cluster: user_api }
+                route: { cluster: identity_api }
               - match: { prefix: "/messaging/" }
-                route: { cluster: message_api }
+                route: { cluster: messaging_api }
               - match: { prefix: "/" }
-                route: { cluster: web_spa_bff }
+                route: { cluster: web_chat_bff }
           http_filters:
           - name: envoy.filters.http.router
             typed_config:
               "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
-  - name: chat_api
+  - name: bss_api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: chat_api_1
+      cluster_name: bss_api_1
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: chat-api
+                address: blob-storage-api
                 port_value: 80
-  - name: chat_hub
+  - name: chatting_api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: chat_hub_1
+      cluster_name: chatting_api_1
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: chat-hub
+                address: chatting-api
                 port_value: 80
-  - name: user_api
+  - name: chatting_hub
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: user_api_1
+      cluster_name: chatting_hub_1
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: user-api
+                address: chatting-signalr-hub
                 port_value: 80
-  - name: message_api
+  - name: contacts-api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: message_api_1
+      cluster_name: contacts_api_1
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: message-api
+                address: contacts-api
                 port_value: 80
-  - name: web_spa_bff
+  - name:   identity_api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: web_spa_bff_1
+      cluster_name:   identity_api_1
       endpoints:
       - lb_endpoints:
         - endpoint:
             address:
               socket_address:
-                address: web-spa-bff
+                address:   identity-api
+                port_value: 80
+  - name: messaging_api
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: messaging_api_1
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address:  messaging-api
+                port_value: 80
+  - name: web_chat_bff
+    connect_timeout: 0.25s
+    type: strict_dns
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: web_chat_bff_1
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: web-chat-http-aggregator
                 port_value: 80

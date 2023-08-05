@@ -1,0 +1,47 @@
+trigger:
+  - master
+
+pool:
+  vmImage: "ubuntu-latest"
+  name: Azure Pipelines
+
+steps:
+  - task: DockerCompose@0
+    displayName: "Build Services"
+    inputs:
+      containerregistrytype: "Container Registry"
+      dockerRegistryEndpoint: aliyun-singapore-docker
+      dockerComposeFile: "src/docker-compose.yml"
+      additionalDockerComposeFiles: "docker-compose.override.yml"
+      dockerComposeFileArgs: |
+        ASPNETCORE_ENVIRONMENT=Production
+        DOCKER_REGISTRY=registry.ap-southeast-1.aliyuncs.com/foozen
+        TAG=latest
+      action: "Build services"
+
+  - task: DockerCompose@0
+    displayName: "Push Services"
+    inputs:
+      containerregistrytype: "Container Registry"
+      dockerRegistryEndpoint: aliyun-singapore-docker
+      dockerComposeFile: "src/docker-compose.yml"
+      additionalDockerComposeFiles: "docker-compose.override.yml"
+      dockerComposeFileArgs: |
+        ASPNETCORE_ENVIRONMENT=Production
+        DOCKER_REGISTRY=registry.ap-southeast-1.aliyuncs.com/foozen
+        TAG=latest
+      action: "Push services"
+
+  - task: SSH@0
+    displayName: "Deploy on remote machine"
+    inputs:
+      sshEndpoint: azure-sg
+      runOptions: inline
+      inline: |
+        sudo su
+        cd /docker/deepin
+        cat /docker/docker.password | docker login --username=leoyang0105@outlook.com --password-stdin registry.ap-southeast-1.aliyuncs.com
+        docker compose pull 
+        docker compose down
+        docker compose up -d
+      failOnStdErr: false

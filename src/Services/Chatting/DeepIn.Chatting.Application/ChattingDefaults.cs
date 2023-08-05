@@ -8,7 +8,7 @@ public static class ChattingDefaults
     public static class CacheKeys
     {
         public static string GetChats(string userId) => $"chats_{userId}";
-        public static string GetChatUserIds(string chatId) => $"chat_users_{chatId}";
+       // public static string GetChatUserIds(string chatId) => $"chat_users_{chatId}";
     }
     public static class TableNames
     {

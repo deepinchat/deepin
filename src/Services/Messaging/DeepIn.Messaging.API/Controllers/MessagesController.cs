@@ -20,6 +20,7 @@ namespace DeepIn.Messaging.API.Controllers
             _messageService = messageService;
             _userContext = userContext;
         }
+        //TODO Need to check chat permission
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
@@ -28,7 +29,7 @@ namespace DeepIn.Messaging.API.Controllers
                 return NotFound();
             return Ok(result);
         }
-
+        //TODO Need to check chat permission
         [HttpGet]
         public async Task<IActionResult> GetList([FromQuery] MessageQuery query)
         {
@@ -36,11 +37,11 @@ namespace DeepIn.Messaging.API.Controllers
             return Ok(list);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] MessageRequest request)
-        {
-            var list = await _messageService.InsertAsync(request, _userContext.UserId);
-            return Ok(list);
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Post([FromBody] MessageRequest request)
+        //{
+        //    var list = await _messageService.InsertAsync(request, _userContext.UserId);
+        //    return Ok(list);
+        //}
     }
 }

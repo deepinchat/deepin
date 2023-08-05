@@ -2,15 +2,11 @@
 using DeepIn.Chatting.Application.Queries;
 using DeepIn.Service.Common.Services;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeepIn.Chatting.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ChatsController : ControllerBase
+    public class ChatsController : BaseController
     {
         private readonly IMediator _mediator;
         private readonly IUserContext _userContext;
@@ -26,7 +22,6 @@ namespace DeepIn.Chatting.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> Get(string id)
         {
             var chat = await _chatQueries.GetChatById(id);
@@ -37,9 +32,9 @@ namespace DeepIn.Chatting.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetChats()
         {
-            var list = await _chatQueries.GetChats(_userContext.UserId);
+            var list = await _chatQueries.GetUserChats(_userContext.UserId);
             return Ok(list);
-        } 
+        }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateChatCommand command)
         {
@@ -52,15 +47,16 @@ namespace DeepIn.Chatting.API.Controllers
             var dialogue = await _mediator.Send(command);
             return CreatedAtAction(nameof(Get), new { id = dialogue.Id }, dialogue);
         }
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateChat(long id, [FromBody] ChatInfoRequest request)
-        //{
-        //    await _mediator.Send(new UpdateChatCommand(id, request));
-        //    return Ok();
-        //}
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
+            var chat = await _chatQueries.GetChatById(id);
+            if (chat == null)
+                return NotFound();
+            var chatOwners = await _chatQueries.GetChatMembers(chatId: id, isOwner: true);
+            if (chatOwners.Items.Any(m => m.UserId == _userContext.UserId))
+                return Forbid();
             await _mediator.Send(new DeleteChatCommand(id));
             return NoContent();
         }
@@ -81,7 +77,11 @@ namespace DeepIn.Chatting.API.Controllers
         [HttpGet("{id}/members")]
         public async Task<IActionResult> GetMembers(string id, int pageIndex = 1, int pageSize = 10)
         {
-            var pagedResult = await _chatQueries.GetChatMembers(id, null, null, pageIndex, pageSize);
+            var isUserInChat = await _chatQueries.IsUserInChat(_userContext.UserId, id);
+            if (!isUserInChat)
+                return Forbid();
+
+            var pagedResult = await _chatQueries.GetChatMembers(chatId: id, pageIndex: pageIndex, pageSize: pageSize);
             return Ok(pagedResult);
         }
     }

@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{096600CC-EEAC-46B7-AAB9-E02A1DBE72E0}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
+		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{52D1B89A-1A30-417F-8AC7-6814D0D7E1C3}"
@@ -99,7 +100,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepIn.Chatting.BackgroundTasks", "Services\Chatting\DeepIn.Chatting.BackgroundTasks\DeepIn.Chatting.BackgroundTasks.csproj", "{60D91B1B-3589-4817-A204-878F23D9C356}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepIn.WebChat.HttpAggregator", "ApiGateways\Bff\DeepIn.WebChat.HttpAggregator\DeepIn.WebChat.HttpAggregator.csproj", "{322A6615-DF24-4DD3-952C-9E7238CF8EF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeepIn.WebChat.HttpAggregator", "ApiGateways\Bff\DeepIn.WebChat.HttpAggregator\DeepIn.WebChat.HttpAggregator.csproj", "{322A6615-DF24-4DD3-952C-9E7238CF8EF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

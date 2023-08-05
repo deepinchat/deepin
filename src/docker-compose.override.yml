@@ -1,14 +1,12 @@
-version: '3.4'
-
 services:
   identity-server-web:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
-      - ConnectionStrings__IdentityConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepIn;
-      - ConnectionStrings__ConfigurationConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepIn;
-      - ConnectionStrings__PersistedGrantConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepIn;
+      - ConnectionStrings__IdentityConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - ConnectionStrings__ConfigurationConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - ConnectionStrings__PersistedGrantConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - IdentityServer__Url=${IDENTITY_URL}
       - IdentityServer__CertificatePath=${IDSV_CERT_PATH}
       - IdentityServer__CertificatePassword=${IDSV_CERT_PWD}
@@ -40,16 +38,37 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - PathBase=chatting
+      - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - Identity__Url=${IDENTITY_URL}
+      - Caching__ProviderName=${CACHE_PROVIDER}
+      - Caching__ConnectionString=${REDIS_CONNECTION}
+      - Caching__DefaultCacheTimeMinutes=30
+      - Caching__Database=0
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
       - "5002:80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   chatting-signalr-hub:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - Identity__Url=${IDENTITY_URL}
+      - Caching__ProviderName=${CACHE_PROVIDER}
+      - Caching__ConnectionString=${REDIS_CONNECTION}
+      - Caching__DefaultCacheTimeMinutes=30
+      - Caching__Database=0
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
       - "5003:80"
 
@@ -58,6 +77,18 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - PathBase=contacts
+      - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - Identity__Url=${IDENTITY_URL}
+      - Caching__ProviderName=${CACHE_PROVIDER}
+      - Caching__ConnectionString=${REDIS_CONNECTION}
+      - Caching__DefaultCacheTimeMinutes=30
+      - Caching__Database=0
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
       - "5004:80"
 
@@ -66,32 +97,84 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - PathBase=emailing
+      - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - Identity__Url=${IDENTITY_URL}
+      - Caching__ProviderName=${CACHE_PROVIDER}
+      - Caching__ConnectionString=${REDIS_CONNECTION}
+      - Caching__DefaultCacheTimeMinutes=30
+      - Caching__Database=0
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
+      - Smtp__Host=${SMTP_HOST}
+      - Smtp__PORT=${SMTP_PORT}
+      - Smtp__FromAddress=${SMTP_FROM_ADDRESS}
+      - Smtp__FromDisplayName=${SMTP_FROM_DISPLAY_NAME}
+      - Smtp__ReplyTo=${SMTP_REPLY_TO}
+      - Smtp__Password=${SMTP_PASSWORD}
     ports:
       - "5005:80"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
   identity-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - PathBase=identity
+      - ConnectionStrings__IdentityConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - ConnectionStrings__ConfigurationConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - ConnectionStrings__PersistedGrantConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - Identity__Url=${IDENTITY_URL}
+      - Caching__ProviderName=${CACHE_PROVIDER}
+      - Caching__ConnectionString=${REDIS_CONNECTION}
+      - Caching__DefaultCacheTimeMinutes=30
+      - Caching__Database=0
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
-      - "80"
+      - "5006:80"
 
   identity-server-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - PathBase=identity-server
+      - ConnectionStrings__IdentityConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - ConnectionStrings__ConfigurationConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - ConnectionStrings__PersistedGrantConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
+      - Identity__Url=${IDENTITY_URL}
+      - Caching__ProviderName=${CACHE_PROVIDER}
+      - Caching__ConnectionString=${REDIS_CONNECTION}
+      - Caching__DefaultCacheTimeMinutes=30
+      - Caching__Database=0
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
-      - "80"
+      - "5007:80"
 
   messaging-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - PathBase=messaging
+      - ConnectionStrings__DefaultConnection=mongodb://root:Strong@Passw0rd@{/
+      - Identity__Url=${IDENTITY_URL}
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
       - "80"
 

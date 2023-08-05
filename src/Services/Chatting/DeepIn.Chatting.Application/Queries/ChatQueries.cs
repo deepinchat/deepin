@@ -3,7 +3,6 @@ using DeepIn.Application.Models;
 using DeepIn.Caching;
 using DeepIn.Chatting.Application.Dtos;
 using Npgsql;
-using System.Collections.Generic;
 using static DeepIn.Chatting.Application.ChattingDefaults;
 
 namespace DeepIn.Chatting.Application.Queries
@@ -19,7 +18,7 @@ namespace DeepIn.Chatting.Application.Queries
             _connectionString = connectionString;
             _cacheManager = cacheManager;
         }
-        private async Task<IEnumerable<ChatDTO>> QueryChats(string userId)
+        private async Task<IEnumerable<ChatDTO>> QueryUserChats(string userId)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
             {
@@ -33,9 +32,9 @@ namespace DeepIn.Chatting.Application.Queries
                 return result;
             }
         }
-        public async Task<IEnumerable<ChatDTO>> GetChats(string userId)
+        public async Task<IEnumerable<ChatDTO>> GetUserChats(string userId)
         {
-            return await _cacheManager.GetOrCreateAsync(CacheKeys.GetChats(userId), () => this.QueryChats(userId));
+            return await _cacheManager.GetOrCreateAsync(CacheKeys.GetChats(userId), () => this.QueryUserChats(userId));
         }
         public async Task<ChatDTO> GetChatById(string id)
         {
@@ -47,7 +46,7 @@ namespace DeepIn.Chatting.Application.Queries
                 return result;
             }
         }
-        public async Task<IPagedResult<ChatMemberDTO>> GetChatMembers(string chatId, string keywords = null, bool? isBot = null, int pageIndex = 1, int pageSize = 10)
+        public async Task<IPagedResult<ChatMemberDTO>> GetChatMembers(string chatId, string keywords = null, bool? isBot = null, bool? isOwner = null, int pageIndex = 1, int pageSize = 10)
         {
             var sql = $@"SELECT * FROM {TableNames.ChatMember}"; //TODO query by field not *
             var sqlForTotalCount = $@"SELECT COUNT(1) FROM {TableNames.ChatMember} ";
@@ -60,39 +59,45 @@ namespace DeepIn.Chatting.Application.Queries
             {
                 condation += "AND is_bot = @isBot ";
             }
+            if (isOwner.HasValue)
+            {
+                condation += "AND is_owner = @isOwner ";
+            }
             sqlForTotalCount += condation;
             sql += $"{condation} ORDER BY created_at OFFSET {(pageIndex - 1) * pageSize} LIMIT {pageSize};";
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
                 var list = await connection.QueryAsync<ChatMemberDTO>(sql, new { chatId, keywords = $"%{keywords}%", isBot });
-                var count = await connection.QueryFirstAsync<int>(sqlForTotalCount, new { chatId, keywords = $"%{keywords}%", isBot });
+                var count = await connection.QueryFirstAsync<int>(sqlForTotalCount, new { chatId, keywords = $"%{keywords}%", isBot, isOwner });
                 return new PagedResult<ChatMemberDTO>(list, pageIndex, pageSize, count);
             }
         }
         public async Task<bool> IsUserInChat(string userId, string chatId)
         {
-            var sql = $@"SELECT COUNT(*) FROM {TableNames.ChatMember} WHERE chat_id = @chatId AND user_id = @userId";
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-                var count = await connection.QueryFirstAsync<int>(sql, new { chatId, userId });
-                return count > 0;
-            }
+            var chats = await this.GetUserChats(userId);
+            return chats.Any(chat => chat.Id == chatId);
+            //var sql = $@"SELECT COUNT(*) FROM {TableNames.ChatMember} WHERE chat_id = @chatId AND user_id = @userId";
+            //using (var connection = new NpgsqlConnection(_connectionString))
+            //{
+            //    connection.Open();
+            //    var count = await connection.QueryFirstAsync<int>(sql, new { chatId, userId });
+            //    return count > 0;
+            //}
         }
-        public async Task<IEnumerable<string>> GetChatUserIds(string chatId)
-        {
-            return await _cacheManager.GetOrCreateAsync(CacheKeys.GetChatUserIds(chatId), () => this.QueryChatUserIds(chatId));
-        }
-        private async Task<IEnumerable<string>> QueryChatUserIds(string chatId)
-        {
-            using (var connection = new NpgsqlConnection(_connectionString))
-            {
-                connection.Open();
-                var sql = $@"SELECT user_id FROM {TableNames.ChatMember} WHERE chat_id = @chatId ";
-                var result = await connection.QueryAsync<string>(sql, new { chatId });
-                return result;
-            }
-        }
+        //public async Task<IEnumerable<string>> GetChatUserIds(string chatId)
+        //{
+        //    return await _cacheManager.GetOrCreateAsync(CacheKeys.GetChatUserIds(chatId), () => this.QueryChatUserIds(chatId));
+        //}
+        //private async Task<IEnumerable<string>> QueryChatUserIds(string chatId)
+        //{
+        //    using (var connection = new NpgsqlConnection(_connectionString))
+        //    {
+        //        connection.Open();
+        //        var sql = $@"SELECT user_id FROM {TableNames.ChatMember} WHERE chat_id = @chatId ";
+        //        var result = await connection.QueryAsync<string>(sql, new { chatId });
+        //        return result;
+        //    }
+        //}
     }
 }
