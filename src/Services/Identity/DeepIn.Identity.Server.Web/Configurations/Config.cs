@@ -19,6 +19,7 @@ namespace DeepIn.Identity.Server.Web.Configurations
                 new ApiScope("identity.admin", "Identity Service Admin API"),
                 new ApiScope("chat", "Chat Service"),
                 new ApiScope("message", "Message Service"),
+                new ApiScope("bff.web.chat", "Web chat bff service"),
             };
         }
         // ApiResources define the apis in your system
@@ -41,6 +42,10 @@ namespace DeepIn.Identity.Server.Web.Configurations
                 new ApiResource("message.api", "Message Service")
                 {
                     Scopes = new string[]{ "message" }
+                },
+                new ApiResource("bff.web.chat", "Web chat bff service")
+                {
+                    Scopes = new string[]{ "bff.web.chat" }
                 },
             };
         }
@@ -86,7 +91,8 @@ namespace DeepIn.Identity.Server.Web.Configurations
                     "bss",
                     "identity",
                     "chat",
-                    "message"
+                    "message",
+                    "bff.web.chat"
                     }).ToArray(),
                 },
                 new Client

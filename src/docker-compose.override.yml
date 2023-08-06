@@ -22,6 +22,8 @@ services:
       - GitHub__ClientId=${GITHUB_CLIENT_ID}
       - GitHub__ClientSecret=${GITHUB_CLIENT_SECRET}
       - GitHub__CallbackPath=/signin-github
+    volumes:
+      - ./certs:/certs:ro
     ports:
       - "5000:80"
 
@@ -31,7 +33,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
     ports:
-      - "5001:80"
+      - "80"
 
   chatting-api:
     environment:
@@ -51,7 +53,7 @@ services:
       - EventBus__Username=${EVENT_BUS_USERNAME}
       - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
-      - "5002:80"
+      - "80"
 
   chatting-signalr-hub:
     environment:
@@ -70,7 +72,7 @@ services:
       - EventBus__Username=${EVENT_BUS_USERNAME}
       - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
-      - "5003:80"
+      - "80"
 
   contacts-api:
     environment:
@@ -90,7 +92,7 @@ services:
       - EventBus__Username=${EVENT_BUS_USERNAME}
       - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
-      - "5004:80"
+      - "80"
 
   emailing-api:
     environment:
@@ -99,7 +101,6 @@ services:
       - TZ=${TIME_ZONE}
       - PathBase=emailing
       - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
-      - Identity__Url=${IDENTITY_URL}
       - Caching__ProviderName=${CACHE_PROVIDER}
       - Caching__ConnectionString=${REDIS_CONNECTION}
       - Caching__DefaultCacheTimeMinutes=30
@@ -116,7 +117,7 @@ services:
       - Smtp__ReplyTo=${SMTP_REPLY_TO}
       - Smtp__Password=${SMTP_PASSWORD}
     ports:
-      - "5005:80"
+      - "80"
 
   identity-api:
     environment:
@@ -138,7 +139,7 @@ services:
       - EventBus__Username=${EVENT_BUS_USERNAME}
       - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
-      - "5006:80"
+      - "80"
 
   identity-server-api:
     environment:
@@ -160,7 +161,7 @@ services:
       - EventBus__Username=${EVENT_BUS_USERNAME}
       - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
-      - "5007:80"
+      - "80"
 
   messaging-api:
     environment:
@@ -184,11 +185,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
     ports:
-      - "5001:80"
+      - "80"
 
   web-chat-api-gw:
     volumes:
-      - ./ApiGateways/Envoy/config/webspa-envoy.yml:/etc/envoy/envoy.yaml
+      - ./config/web-chat-envoy.yml:/etc/envoy/envoy.yaml
     ports:
     - "9901:9901"
     - "10000:10000"

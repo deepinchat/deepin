@@ -23,7 +23,7 @@ public static class WebApplicationExtensions
             app.UseExceptionHandler("/Home/Error");
         }
 
-        var pathBase = app.Configuration["PATH_BASE"];
+        var pathBase = app.Configuration["PathBase"];
 
         if (!string.IsNullOrEmpty(pathBase))
         {
@@ -59,7 +59,7 @@ public static class WebApplicationExtensions
         app.UseSwaggerUI(setup =>
         {
 
-            var pathBase = configuration["PATH_BASE"];
+            var pathBase = configuration["PathBase"];
             var authSection = openApiSection.GetSection("Auth");
             var endpointSection = openApiSection.GetRequiredSection("Endpoint");
 

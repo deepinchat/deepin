@@ -1,49 +1,74 @@
 admin:
   address:
-    socket_address: { address: 0.0.0.0, port_value: 9901 }
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901
 
 static_resources:
   listeners:
-  - name: listener_0
-    address:
-      socket_address: { address: 0.0.0.0, port_value: 10000 }
-    filter_chains:
-    - filters:
-      - name: envoy.filters.network.http_connection_manager
-        typed_config:
-          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-          stat_prefix: ingress_http
-          codec_type: AUTO
-          route_config:
-            name: local_route
-            virtual_hosts:
-            - name: eshop_backend
-              domains: ["*"]
-              routes:
-              - match: { prefix: "/bss/" }
-                route: { cluster: bss_api }
-              - match: { prefix: "/chatting/" }
-                route: { cluster: chatting_api }
-              - match: { prefix: "/hubs/" }
-                route:
-                  auto_host_rewrite: true
-                  cluster: chatting_hub
-                  timeout: 300s
-                  upgrade_configs:
-                    upgrade_type: "websocket"
-                    enabled: true
-              - match: { prefix: "/contacts/" }
-                route: { cluster: contacts_api }
-              - match: { prefix: "/identity/" }
-                route: { cluster: identity_api }
-              - match: { prefix: "/messaging/" }
-                route: { cluster: messaging_api }
-              - match: { prefix: "/" }
-                route: { cluster: web_chat_bff }
-          http_filters:
-          - name: envoy.filters.http.router
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+    - name: listener_0
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 10000
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_http
+                access_log:
+                  - name: envoy.access_loggers.stdout
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: deepin_services
+                      domains: ["*"]
+                      routes:
+                        - match: 
+                            prefix: "/bss/" 
+                          route:
+                            prefix_rewrite: "/"
+                            cluster: bss_api
+                        - match:
+                            prefix: "/chatting/"
+                          route:
+                            prefix_rewrite: "/"
+                            cluster: chatting_api
+                        - match:
+                            prefix: "/hub/"
+                          route:
+                            prefix_rewrite: "/hub"
+                            cluster: chatting_hub
+                            timeout: 300s
+                            upgrade_configs:
+                              upgrade_type: "websocket"
+                              enabled: true
+                        - match:
+                            prefix: "/contacts/"
+                          route:
+                            prefix_rewrite: "/"
+                            cluster: contacts_api
+                        - match:
+                            prefix: "/identity/"
+                          route:
+                            prefix_rewrite: "/"
+                            cluster: identity_api
+                        - match:
+                            prefix: "/messaging/"
+                          route:
+                            prefix_rewrite: "/"
+                            cluster: messaging_api
+                        - match:
+                            prefix: "/"
+                          route:
+                            cluster: web_chat_bff
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
   - name: bss_api
     connect_timeout: 0.25s
@@ -52,12 +77,12 @@ static_resources:
     load_assignment:
       cluster_name: bss_api_1
       endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: blob-storage-api
-                port_value: 80
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: blob-storage-api
+                    port_value: 80
   - name: chatting_api
     connect_timeout: 0.25s
     type: strict_dns
@@ -65,12 +90,12 @@ static_resources:
     load_assignment:
       cluster_name: chatting_api_1
       endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: chatting-api
-                port_value: 80
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: chatting-api
+                    port_value: 80
   - name: chatting_hub
     connect_timeout: 0.25s
     type: strict_dns
@@ -78,61 +103,61 @@ static_resources:
     load_assignment:
       cluster_name: chatting_hub_1
       endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: chatting-signalr-hub
-                port_value: 80
-  - name: contacts-api
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: chatting-signalr-hub
+                    port_value: 80
+  - name: contacts_api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: contacts_api_1
       endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: contacts-api
-                port_value: 80
-  - name:   identity_api
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: contacts-api
+                    port_value: 80
+  - name: identity_api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name:   identity_api_1
+      cluster_name: identity_api_1
       endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address:   identity-api
-                port_value: 80
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: identity-api
+                    port_value: 80
   - name: messaging_api
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: messaging_api_1
+      cluster_name: messaging_api
       endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address:  messaging-api
-                port_value: 80
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: messaging-api
+                    port_value: 80
   - name: web_chat_bff
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: ROUND_ROBIN
     load_assignment:
-      cluster_name: web_chat_bff_1
+      cluster_name: web_chat_bff
       endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: web-chat-http-aggregator
-                port_value: 80
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: web-chat-http-aggregator
+                    port_value: 80

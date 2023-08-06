@@ -78,4 +78,4 @@ services:
       - identity-server-web
 
   web-chat-api-gw:
-    image: envoyproxy/envoy:v1.25-latest
+    image: envoyproxy/envoy:v1.27-latest

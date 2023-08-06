@@ -42,7 +42,7 @@ public class Program
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapHub<ChatsHub>("/hubs/chats");
+            endpoints.MapHub<ChatsHub>("/hub/chats");
         });
 
         app.Run();

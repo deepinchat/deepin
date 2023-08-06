@@ -39,7 +39,7 @@ steps:
       runOptions: inline
       inline: |
         cd /docker/deepin
-        cat /docker/docker.password | docker login --username=leoyang0105@outlook.com --password-stdin registry.ap-southeast-1.aliyuncs.com
+        cat /docker/deepin/docker.password | docker login --username=leoyang0105@outlook.com --password-stdin registry.ap-southeast-1.aliyuncs.com
         docker compose pull 
         docker compose down
         docker compose up -d
