@@ -32,6 +32,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - PathBase=/bss
     ports:
       - "80"
 
@@ -40,7 +41,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
-      - PathBase=chatting
+      - PathBase=/chatting
       - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - Identity__Url=${IDENTITY_URL}
       - Caching__ProviderName=${CACHE_PROVIDER}
@@ -79,7 +80,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
-      - PathBase=contacts
+      - PathBase=/contacts
       - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - Identity__Url=${IDENTITY_URL}
       - Caching__ProviderName=${CACHE_PROVIDER}
@@ -99,7 +100,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
-      - PathBase=emailing
       - ConnectionStrings__DefaultConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - Caching__ProviderName=${CACHE_PROVIDER}
       - Caching__ConnectionString=${REDIS_CONNECTION}
@@ -124,7 +124,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
-      - PathBase=identity
+      - PathBase=/identity
       - ConnectionStrings__IdentityConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - ConnectionStrings__ConfigurationConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - ConnectionStrings__PersistedGrantConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
@@ -146,7 +146,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
-      - PathBase=identity-server
+      - PathBase=/identity-server
       - ConnectionStrings__IdentityConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - ConnectionStrings__ConfigurationConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
       - ConnectionStrings__PersistedGrantConnection=Host=${PG_DB_HOST};Username=${PG_DB_USER};Password=${PG_DB_PASSWORD};Database=deepin;
@@ -168,7 +168,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
-      - PathBase=messaging
+      - PathBase=/messaging
       - ConnectionStrings__DefaultConnection=mongodb://root:Strong@Passw0rd@{/
       - Identity__Url=${IDENTITY_URL}
       - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
@@ -184,6 +184,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
+      - Identity__Url=${IDENTITY_URL}
     ports:
       - "80"
 
