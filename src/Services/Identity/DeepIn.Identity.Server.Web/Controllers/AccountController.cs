@@ -159,7 +159,7 @@ public class AccountController : ControllerBase
             ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
             return BadRequest(ModelState);
         }
-        await SendEmail(user, UserEmailType.VerificationCode);
+        await SendEmail(user, UserEmailType.Register);
         return Ok();
 
     }
