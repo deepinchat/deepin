@@ -5,6 +5,6 @@ namespace DeepIn.Identity.Domain.Entities
 {
     public class UserLogin : IdentityUserLogin<string>, IEntity
     {
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

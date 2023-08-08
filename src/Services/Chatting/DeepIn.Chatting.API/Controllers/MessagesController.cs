@@ -28,7 +28,7 @@ namespace DeepIn.Chatting.API.Controllers
             var isUserInChat = await _chatQueries.IsUserInChat(_userContext.UserId, chatId);
             if (!isUserInChat)
                 return Forbid();
-            await _publishEndpoint.Publish(new SaveMessageIntegrationEvent(chatId, model.Content, model.ReplyTo, _userContext.UserId, DateTime.Now));
+            await _publishEndpoint.Publish(new SaveMessageIntegrationEvent(chatId, model.Content, model.ReplyTo, _userContext.UserId, DateTime.UtcNow));
             return Ok();
         }
     }

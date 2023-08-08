@@ -6,6 +6,6 @@ namespace DeepIn.Identity.Domain.Entities
     public class Role : IdentityRole, IEntity
     {
         public string DisplayName { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

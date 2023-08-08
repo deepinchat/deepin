@@ -11,7 +11,7 @@ namespace DeepIn.Identity.Server.Web.Extensions
     {
         public static AuthenticationBuilder AddGitHub(this AuthenticationBuilder builder, IConfiguration configuration)
         {
-            var githubSection = configuration.GetSection("GitHub");
+            var githubSection = configuration.GetSection(AppDefaults.LoginProvider.GitHub);
             if (!githubSection.Exists())
             {
                 return builder;
@@ -19,7 +19,7 @@ namespace DeepIn.Identity.Server.Web.Extensions
             // You must first create an app with GitHub and add its ID and Secret to your user-secrets.
             // https://github.com/settings/applications/
             // https://docs.github.com/en/developers/apps/authorizing-oauth-apps
-            return builder.AddOAuth("GitHub", "GitHub", o =>
+            return builder.AddOAuth(AppDefaults.LoginProvider.GitHub, AppDefaults.LoginProvider.GitHub, o =>
             {
                 o.ClientId = githubSection["ClientId"];
                 o.ClientSecret = githubSection["ClientSecret"];

@@ -5,7 +5,7 @@ public abstract record IntegrationEvent
     public IntegrationEvent()
     {
         Id = Guid.NewGuid();
-        CreatedDateTime = DateTime.Now;
+        CreatedDateTime = DateTime.UtcNow;
     } 
     public Guid Id { get; private set; }
     public DateTime CreatedDateTime { get; private set; }

@@ -43,7 +43,7 @@ public class AccountController : ControllerBase
         _signInManager = signInManager;
         _publishEndpoint = publishEndpoint;
         _userContext = userContext;
-        _httpContextAccessor = httpContextAccessor; 
+        _httpContextAccessor = httpContextAccessor;
     }
 
     #region Login 
@@ -93,22 +93,16 @@ public class AccountController : ControllerBase
             var user = await _userManager.FindByLoginAsync(loginInfo.LoginProvider, loginInfo.ProviderKey);
             if (user == null)
             {
-                user = new User()
-                {
-                    UserName = Domain.Entities.User.GenerateGuidUserName(),
-                };
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
+                user = await _userManager.CreateUserByExternalLoginAsync(loginInfo, ModelState);
+                if (user != default)
                 {
                     var addLoginResult = await _userManager.AddLoginAsync(user, loginInfo);
                     if (!addLoginResult.Succeeded)
                     {
-                        AddIdentityErrors(result);
+                        AddIdentityErrors(addLoginResult);
                         await _userManager.DeleteAsync(user);
                     }
                 }
-                else
-                    AddIdentityErrors(result);
             }
             if (ModelState.IsValid)
             {
