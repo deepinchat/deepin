@@ -2,6 +2,7 @@
 using DeepIn.Caching.Redis;
 using DeepIn.EventBus.RabbitMQ;
 using DeepIn.Service.Common.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtensions
 {
     public static WebApplicationBuilder AddServiceDefaults(this WebApplicationBuilder builder, Assembly eventHandlerAssembly = null)
     {
+        builder.Services.AddAllowAnyCorsPolicy();
         // Default health checks assume the event bus and self health checks
         builder.Services.AddDefaultHealthChecks(builder.Configuration);
 
@@ -160,20 +162,45 @@ public static class ServiceCollectionExtensions
         // prevent from mapping "sub" claim to nameidentifier.
         JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
-        services.AddAuthentication().AddJwtBearer(options =>
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
         {
             var identityUrl = identitySection.GetRequiredValue("Url");
             var audience = identitySection.GetRequiredValue("Audience");
+            var allowTokenFromUrl = identitySection.GetValue<bool>("AllowUrlToken");//?.Equals(bool.TrueString, StringComparison.CurrentCultureIgnoreCase);
 
             options.Authority = identityUrl;
             options.RequireHttpsMetadata = false;
             options.Audience = audience;
             options.TokenValidationParameters.ValidateAudience = false;
+            if (allowTokenFromUrl) 
+            {
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (string.IsNullOrEmpty(context.Token))
+                        {
+                            var path = context.HttpContext.Request.Path;
+                            if (path.StartsWithSegments("/hub"))
+                            {
+                                var accessToken = context.Request.Query["access_token"];
+                                if (!string.IsNullOrEmpty(accessToken))
+                                {
+                                    context.Token = accessToken;
+                                }
+                            }
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            }
         });
 
         return services;
     }
-    public static IServiceCollection AddDeepInAllowAnyCorsPolicy(this IServiceCollection services)
+    public static IServiceCollection AddAllowAnyCorsPolicy(this IServiceCollection services)
     {
         return services.AddCors(options =>
         {

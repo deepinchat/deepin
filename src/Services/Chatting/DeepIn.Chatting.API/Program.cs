@@ -12,6 +12,9 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app
+    .MigrateDbContext<ChattingDbContext>((_, __) => { });
+
 // Configure the HTTP request pipeline.
 app.UseServiceDefaults();
 

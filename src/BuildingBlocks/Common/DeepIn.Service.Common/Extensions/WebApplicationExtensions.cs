@@ -30,7 +30,7 @@ public static class WebApplicationExtensions
             app.UsePathBase(pathBase);
         }
         app.UseRouting();
-
+        app.UseAllowAnyCorsPolicy();
         var identitySection = app.Configuration.GetSection("Identity");
 
         if (identitySection.Exists())
