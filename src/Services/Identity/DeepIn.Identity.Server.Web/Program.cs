@@ -4,6 +4,7 @@ using DeepIn.Identity.Server.Web.Extensions;
 using DeepIn.Service.Common.Extensions;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,6 @@ builder.Services.AddCustomIdenityServerAPI(builder.Configuration, builder.Enviro
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
-
 app
     .MigrateDbContext<IdentityObjectContext>((_, __) => { })
     .MigrateDbContext<ConfigurationObjectContext>((context, sp) =>
@@ -36,6 +36,14 @@ app
             .SeedAsync(context).Wait();
     })
     .MigrateDbContext<PersistedGrantObjectContext>((_, __) => { });
+
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

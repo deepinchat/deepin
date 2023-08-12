@@ -30,8 +30,8 @@ const endPoints = {
         forgotPassword: `${environment.baseUrl}/api/account/forgotPassword`,
         resetPassword: `${environment.baseUrl}/api/account/resetPassword`,
     },
-    challenge: {
-        externalLogin: (provider: string, returnUrl = '') => `/Challenge/ExternalLogin?provider=${provider}&returnUrl=${returnUrl}`
+  challenge: {
+    externalLogin: (provider: string, returnUrl = '') => `/Challenge/ExternalLogin?provider=${provider}&returnUrl=${encodeURIComponent(returnUrl)}`
     }
 }
 

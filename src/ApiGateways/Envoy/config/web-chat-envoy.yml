@@ -38,9 +38,9 @@ static_resources:
                             prefix_rewrite: "/"
                             cluster: chatting_api
                         - match:
-                            prefix: "/hub/"
+                            prefix: "/chatting-ws/"
                           route:
-                            prefix_rewrite: "/hub"
+                            prefix_rewrite: "/"
                             cluster: chatting_hub
                             timeout: 300s
                             upgrade_configs:

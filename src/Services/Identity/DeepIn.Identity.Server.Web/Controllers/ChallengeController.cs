@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace DeepIn.Identity.Server.Web.Controllers;
 public class ChallengeController : Controller
@@ -17,8 +18,13 @@ public class ChallengeController : Controller
     [HttpGet]
     public IActionResult ExternalLogin(string provider, string returnUrl)
     {
-        var redirectUrl = new Uri(new Uri($"{Request.Scheme}://{Request.Host}"), $"/callback/external-login?returnUrl={returnUrl}");
-        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl.ToString());
+        var urlBuilder = new UriBuilder($"{Request.Scheme}://{Request.Host}");
+        urlBuilder.Path = "/callback/external-login";
+        if (!string.IsNullOrEmpty(returnUrl))
+        {
+            urlBuilder.Query = $"returnUrl={Uri.EscapeDataString(returnUrl)}";
+        }
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, urlBuilder.ToString());
         return Challenge(properties, provider);
     }
 }
