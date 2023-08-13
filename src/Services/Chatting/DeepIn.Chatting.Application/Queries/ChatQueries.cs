@@ -41,7 +41,7 @@ namespace DeepIn.Chatting.Application.Queries
             using (var connection = new NpgsqlConnection(_connectionString))
             {
                 connection.Open();
-                var sql = $@"SELECT id Id, type Type, created_at CreatedAt, updated_at UpdatedAt, created_by CreatedBy FROM {TableNames.Chat} WHERE id = @id";
+                var sql = $@"SELECT avatar_id AvatarBlobId,id Id,name Name,link Link, type Type,description Description, created_at CreatedAt, updated_at UpdatedAt, created_by CreatedBy FROM {TableNames.Chat} WHERE id = @id";
                 var result = await connection.QueryFirstOrDefaultAsync<ChatDTO>(sql, new { id });
                 return result;
             }
