@@ -33,11 +33,12 @@ namespace DeepIn.Chatting.API.Controllers
         public async Task<IActionResult> GetChats()
         {
             var list = await _chatQueries.GetUserChats(_userContext.UserId);
-            return Ok(list);
+            return Ok(list.OrderByDescending(x => x.UpdatedAt));
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateChatCommand command)
         {
+            command.UserId = _userContext.UserId;
             var chat = await _mediator.Send(command);
             return CreatedAtAction(nameof(Get), new { id = chat.Id }, chat);
         }
@@ -68,7 +69,7 @@ namespace DeepIn.Chatting.API.Controllers
             return Ok();
         }
         [HttpPost("{id}/leave")]
-        public async Task<IActionResult> LeaveChat([FromBody] JoinChatCommand command)
+        public async Task<IActionResult> LeaveChat([FromBody] LeaveChatCommand command)
         {
             await _mediator.Send(command);
             return Ok();
