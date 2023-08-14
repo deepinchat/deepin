@@ -26,7 +26,7 @@ namespace DeepIn.Messaging.API.Application.IntegrationEvents.EventHandling
                     Content = context.Message.Content,
                     ReplyTo = context.Message.ReplyTo,
 
-                }, context.Message.From, context.Message.CreatedAt);
+                }, context.Message.From, context.Message.CreatedAt, context.Message.Id.ToString());
             }
             catch (Exception ex)
             {
