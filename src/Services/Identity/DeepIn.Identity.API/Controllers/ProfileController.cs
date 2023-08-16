@@ -16,15 +16,21 @@ namespace DeepIn.Identity.API.Controllers
             _userContext = userContext;
         }
         [HttpGet]
-        public async Task<IActionResult> GetList(string ids)
+        public async Task<IActionResult> Get()
         {
-            var userCliams = await _userService.GetUserClaims(ids.Split(","));
-            var profiles = userCliams.GroupBy(x => x.UserId).Select(g =>
-            {
-                return new ProfileResponse(g.Key, g.ToList());
-            });
-            return Ok(profiles);
+            var response = await _userService.GetProfileByUserId(_userContext.UserId);
+            return Ok(response);
         }
+        //[HttpGet]
+        //public async Task<IActionResult> GetList(string ids)
+        //{
+        //    var userCliams = await _userService.GetUserClaims(ids.Split(","));
+        //    var profiles = userCliams.GroupBy(x => x.UserId).Select(g =>
+        //    {
+        //        return new ProfileResponse(g.Key, g.ToList());
+        //    });
+        //    return Ok(profiles);
+        //}
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)

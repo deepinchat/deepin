@@ -19,11 +19,10 @@ namespace DeepIn.Messaging.API.Services
             _publishEndpoint = publishEndpoint;
             _repository = repository;
         }
-        public async Task<Message> InsertAsync(MessageRequest request, string userId, DateTime? createdAt = null, string messageId = null)
+        public async Task<Message> InsertAsync(MessageRequest request, string userId, DateTime? createdAt = null)
         {
             var message = await _repository.InsertAsync(new Message()
             {
-                Id = messageId,
                 ChatId = request.ChatId,
                 Content = request.Content,
                 CreatedAt = createdAt ?? DateTime.UtcNow,
@@ -43,6 +42,7 @@ namespace DeepIn.Messaging.API.Services
         }
 
         public async Task<MessageResponse> GetByIdAsync(string id)
+
         {
             var message = await _repository.FindByIdAsync(id);
             if (message == null) return null;

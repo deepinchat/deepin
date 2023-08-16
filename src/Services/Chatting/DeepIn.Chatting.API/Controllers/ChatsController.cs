@@ -1,8 +1,5 @@
 ﻿using DeepIn.Chatting.Application.Commands.Chats;
-using DeepIn.Chatting.Application.Dtos;
-using DeepIn.Chatting.Application.Models;
 using DeepIn.Chatting.Application.Queries;
-using DeepIn.EventBus.Shared.Events;
 using DeepIn.Service.Common.Services;
 using MassTransit;
 using MediatR;
@@ -91,25 +88,6 @@ namespace DeepIn.Chatting.API.Controllers
 
             var pagedResult = await _chatQueries.GetChatMembers(chatId: id, pageIndex: pageIndex, pageSize: pageSize);
             return Ok(pagedResult);
-        }
-
-        [HttpPost("{chatId}/Message")]
-        public async Task<IActionResult> Send(string chatId, [FromBody] PostMessageModel model)
-        {
-            var isUserInChat = await _chatQueries.IsUserInChat(_userContext.UserId, chatId);
-            if (!isUserInChat)
-                return Forbid();
-            var @event = new SaveMessageIntegrationEvent(chatId, model.Content, model.ReplyTo, _userContext.UserId, DateTime.UtcNow);
-            await _publishEndpoint.Publish(@event);
-            return Ok(new MessageDTO()
-            {
-                ChatId = chatId,
-                Content = @event.Content,
-                ReplyTo = @event.ReplyTo,
-                CreatedAt = @event.CreatedAt,
-                From = @event.From,
-                Id = @event.Id.ToString()
-            });
         }
     }
 }
