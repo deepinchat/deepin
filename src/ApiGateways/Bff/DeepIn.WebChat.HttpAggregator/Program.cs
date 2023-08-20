@@ -1,4 +1,6 @@
-using DeepIn.Service.Common.Extensions; 
+using DeepIn.Service.Common.Extensions;
+using DeepIn.WebChat.HttpAggregator.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.AddServiceDefaults();
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 

@@ -19,13 +19,13 @@ namespace DeepIn.Messaging.API.Services
             _publishEndpoint = publishEndpoint;
             _repository = repository;
         }
-        public async Task<Message> InsertAsync(MessageRequest request, string userId, DateTime? createdAt = null)
+        public async Task<Message> InsertAsync(MessageRequest request, string userId, DateTimeOffset? createdAt = null)
         {
             var message = await _repository.InsertAsync(new Message()
             {
                 ChatId = request.ChatId,
                 Content = request.Content,
-                CreatedAt = createdAt ?? DateTime.UtcNow,
+                CreatedAt = createdAt.HasValue ? createdAt.Value.ToUnixTimeMilliseconds() : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
                 From = userId,
                 ReplyTo = request.ReplyTo
             });
@@ -36,7 +36,7 @@ namespace DeepIn.Messaging.API.Services
                 CreatedAt = message.CreatedAt,
                 ReplyTo = message.ReplyTo,
                 From = message.From,
-                MessageId = message.Id
+                MessageId = message.Id.ToString()
             });
             return message;
         }
@@ -73,8 +73,8 @@ namespace DeepIn.Messaging.API.Services
         public async Task<IPagedResult<MessageResponse>> GetPagedListAsync(int pageIndex = 1, int pageSize = 10, string chatId = null, string from = null, string keywords = null)
         {
             var query = Query(chatId, from, keywords);
-            var documents = await query.Skip((pageIndex - 1) * pageSize).Limit(pageSize).ToListAsync();
             var totalCount = await query.CountDocumentsAsync();
+            var documents = await query.SortByDescending(s => s.CreatedAt).Skip((pageIndex - 1) * pageSize).Limit(pageSize).ToListAsync();
 
             return new PagedResult<MessageResponse>(documents.Select(m => new MessageResponse(m)), pageIndex, pageSize, (int)totalCount);
         }

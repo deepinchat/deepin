@@ -1,4 +1,5 @@
 ﻿using DeepIn.Messaging.API.Domain;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 
@@ -25,20 +26,16 @@ public class MongoRepository<TDocument> : IMongoRepository<TDocument> where TDoc
     }
     public async Task DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        await Collection.DeleteOneAsync(x => x.Id == id, cancellationToken);
+        await Collection.DeleteOneAsync(x => x.Id == new ObjectId(id), cancellationToken);
     }
 
     public async Task<TDocument> FindByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return await Collection.Find(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
+        return await Collection.Find(x => x.Id == new ObjectId(id)).FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<TDocument> InsertAsync([NotNull] TDocument document, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(document.Id))
-        {
-            document.Id = Guid.NewGuid().ToString();
-        }
         await Collection.InsertOneAsync(document, new InsertOneOptions(), cancellationToken);
         return document;
     }

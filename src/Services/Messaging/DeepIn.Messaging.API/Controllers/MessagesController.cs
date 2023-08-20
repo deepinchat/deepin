@@ -40,8 +40,8 @@ namespace DeepIn.Messaging.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MessageRequest request)
         {
-            var list = await _messageService.InsertAsync(request, _userContext.UserId);
-            return Ok(list);
+            var result = await _messageService.InsertAsync(request, _userContext.UserId);
+            return Ok(new MessageResponse(result));
         }
     }
 }

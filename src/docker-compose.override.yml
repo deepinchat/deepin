@@ -33,6 +33,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
       - PathBase=/bss
+      - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
+      - EventBus__HostName=${EVENT_BUS_HOST}
+      - EventBus__VirtualHost=${EVENT_BUS_VIRTUAL_HOST}
+      - EventBus__Username=${EVENT_BUS_USERNAME}
+      - EventBus__Password=${EVENT_BUS_PASSWORD}
     ports:
       - "80"
 
@@ -169,7 +174,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
       - PathBase=/messaging
-      - ConnectionStrings__DefaultConnection=mongodb://root:Strong@Passw0rd@{/
+      - ConnectionStrings__DefaultConnection=${MONGO_DB_CONNECTION}
       - Identity__Url=${IDENTITY_URL}
       - EventBus__ProviderName=${EVENT_BUS_PROVIDER}
       - EventBus__HostName=${EVENT_BUS_HOST}
@@ -185,12 +190,15 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - TZ=${TIME_ZONE}
       - Identity__Url=${IDENTITY_URL}
+      - Urls__Chatting=http://chatting-api
+      - Urls__Identity=http://identity-api
+      - Urls__Messaging=http://messaging-api
     ports:
       - "80"
 
   web-chat-api-gw:
     volumes:
-      - ./config/web-chat-envoy.yml:/etc/envoy/envoy.yaml
+      - ./ApiGateways/Envoy/config/web-chat-envoy.yml:/etc/envoy/envoy.yaml
     ports:
     - "9901:9901"
     - "10000:10000"

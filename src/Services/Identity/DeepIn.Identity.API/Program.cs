@@ -10,6 +10,8 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddControllers();
+
         builder.AddServiceDefaults(typeof(Program).Assembly);
 
         builder.Services.AddIdentityApplication()
@@ -18,11 +20,13 @@ internal class Program
             builder.Configuration.GetConnectionString("ConfigurationConnection"),
             builder.Configuration.GetConnectionString("PersistedGrantConnection"));
 
-        builder.Services.AddControllers();
 
         var app = builder.Build();
 
         app.UseServiceDefaults();
+
+
+        app.MapControllers();
 
         app.Run();
     }

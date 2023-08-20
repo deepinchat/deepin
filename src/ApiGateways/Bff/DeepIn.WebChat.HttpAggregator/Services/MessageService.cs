@@ -20,7 +20,7 @@ namespace DeepIn.WebChat.HttpAggregator.Services
             var messageResponse = await _messageHttpClient.SendAysnc(message);
             if (messageResponse == null)
                 return null;
-            var userResponse = await _userProfileHttpClient.GetUserProfileAsync(messageResponse.From);
+            var userResponse = await _userProfileHttpClient.GetUserProfileAsync();
             return new MessageData(messageResponse, userResponse);
         }
     }

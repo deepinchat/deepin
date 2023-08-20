@@ -17,7 +17,7 @@ namespace DeepIn.WebChat.HttpAggregator.HttpClients
         }
         public async Task<UserProfileDTO> GetUserProfileAsync()
         {
-            var url = $"{_urls.Messaging}{UrlsConfig.IdentityAPI.GetCurrentUserProfile()}";
+            var url = $"{_urls.Identity}{UrlsConfig.IdentityAPI.GetCurrentUserProfile()}";
             var response = await _httpClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();
@@ -28,7 +28,7 @@ namespace DeepIn.WebChat.HttpAggregator.HttpClients
         }
         public async Task<UserProfileDTO> GetUserProfileAsync(string userId)
         {
-            var url = $"{_urls.Messaging}{UrlsConfig.IdentityAPI.GetUserProfileById(userId)}";
+            var url = $"{_urls.Identity}{UrlsConfig.IdentityAPI.GetUserProfileById(userId)}";
             var response = await _httpClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();

@@ -6,12 +6,12 @@ namespace DeepIn.Messaging.API.Models.Messages
     {
         public string Id { get; set; }
         public string From { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime ModifiedAt { get; set; }
+        public long CreatedAt { get; set; }
+        public long ModifiedAt { get; set; }
         public MessageResponse() { }
         public MessageResponse(Message message)
         {
-            this.Id = message.Id;
+            this.Id = message.Id.ToString();
             this.From = message.From;
             this.CreatedAt = message.CreatedAt;
             this.ModifiedAt = message.ModifiedAt;

@@ -7,5 +7,5 @@ public record PushMessageIntegrationEvent : IntegrationEvent
     public string Content { get; set; }
     public string ReplyTo { get; set; }
     public string From { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public long CreatedAt { get; set; }
 }

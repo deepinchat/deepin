@@ -1,4 +1,5 @@
 ﻿using DeepIn.Service.Common;
+using DeepIn.WebChat.HttpAggregator.Config;
 using DeepIn.WebChat.HttpAggregator.HttpClients;
 using DeepIn.WebChat.HttpAggregator.Services;
 
@@ -6,8 +7,9 @@ namespace DeepIn.WebChat.HttpAggregator.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    internal static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<UrlsConfig>(configuration.GetSection("Urls"));
         // Register delegating handlers
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
@@ -16,7 +18,7 @@ public static class ServiceCollectionExtensions
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
 
-        services.AddHttpClient<IUserHttpClient, UserProfileHttpClient>()
+        services.AddHttpClient<IUserProfileHttpClient, UserProfileHttpClient>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
         services.AddScoped<IMessageService, MessageService>();

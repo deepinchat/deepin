@@ -1,7 +1,9 @@
-﻿namespace DeepIn.Messaging.API.Domain
+﻿using MongoDB.Bson;
+
+namespace DeepIn.Messaging.API.Domain
 {
     public interface IDocument
     {
-        string Id { get; set; }
+        ObjectId Id { get; set; }
     }
 }
